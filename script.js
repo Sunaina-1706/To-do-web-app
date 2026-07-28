@@ -1,0 +1,157 @@
+let mainFrame = document.getElementById("main-frame");
+mainFrame.classList =
+  "flex flex-col items-centeritems-center m-5 w-120 p-5 gap-5 text-2xl";
+let input = document.getElementById("task");
+let textarea = document.getElementById("task-desc");
+textarea.classList =
+  "w-100 h-50 italic border-3 border-teal-800 focus:border-teal-400 rounded-2xl shadow-lg outline p-4 outline-teal/5";
+input.classList =
+  "w-90 h-13 italic border-3 border-teal-800 focus:border-teal-400 rounded-2xl shadow-lg outline p-4 outline-teal/5";
+
+let list = document.getElementById("list");
+let btn = document.getElementById("btn");
+btn.classList =
+  "bg-teal-500 hover:bg-teal-900 hover:text-white hover:shadow-xl rounded-lg w-25 h-13 items-center shadow-lg outline outline-black/10 ";
+let tracker = 1;
+let data = JSON.parse(localStorage.getItem("myTask")) || [];
+let distinct = data.length > 0 ? data[data.length - 1].id + 1 : 1;
+let inputId = 10;
+function onload() {
+  data.forEach((item) => {
+    renderTask(item.task, item.desc, item.id);
+  });
+}
+
+function handleAddTask() {
+  let val = input.value.trim();
+  let detail = textarea.value.trim();
+
+  if (val !== "" && detail !== "") {
+    let newTask = { task: val, desc: detail, id: distinct };
+    data.push(newTask);
+    localStorage.setItem("myTask", JSON.stringify(data));
+    renderTask(newTask.task, newTask.desc, newTask.id);
+    distinct++;
+    input.value = "";
+    textarea.value = "";
+    input.focus();
+  } else {
+    Swal.fire({
+      title: "Warning!",
+      text: "You left Fields Empty!",
+      icon: "warning",
+      iconColor: "teal",
+      confirmButtonColor: "teal",
+    });
+  }
+}
+
+textarea.addEventListener("keypress", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    handleAddTask();
+  }
+});
+btn.addEventListener("click", handleAddTask);
+input.addEventListener("keypress", (e) => {
+  if (e.key === "Enter" && input.value.trim() !== "") {
+    textarea.focus();
+    // handleAddTask();
+  }
+});
+
+function renderTask(task, desc, id) {
+  let li = document.createElement("li");
+  li.classList =
+    "flex flex-row gap-4 justify-around border-b-2 h-auto break-words relative top-1 break-words text-xl w-170 items-center rounded-xl bg-gray-100  p-3 shadow-lg outline outline-black/5 ";
+  let title = document.createElement("div");
+  let functionbtns = document.createElement("span");
+  functionbtns.classList = "flex gap-3 relative bottom-15";
+  // console.log(JSON.stringify(li.classList.value));
+  let donebtn = document.createElement("button");
+  donebtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#104c48" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-check-big-icon lucide-square-check-big"><path d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"/><path d="m9 11 3 3L22 4"/></svg>`;
+  donebtn.classList =
+    "bg-teal-400 rounded-lg h-15 items-center shadow-lg outline outline-black/10";
+
+  let delBtn = document.createElement("button");
+  delBtn.classList =
+    "bg-teal-600 rounded-lg h-15 items-center shadow-lg outline outline-black/10";
+  // let editBtn = document.createElement("button");
+  // editBtn.classList =
+  //   "bg-teal-500 rounded-lg h-15 items-center shadow-lg outline outline-black/10";
+  title.classList = "pl-4 text-2xl w-120 flex flex-col ";
+  // checkDesc(desc);
+  title.innerHTML = `<h3>Task</h3><a id="tasks" class=" same border-1 m-2 boredr-gray-300 rounded-xl p-3"> ${task}</a><h3>Description</h3><a id="descs" class="same m-2 h-auto break-words border-1 boredr-gray-300 rounded-xl p-3"> ${desc}</a>`;
+  // editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#104c48" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-notebook-pen-icon lucide-notebook-pen"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>`;
+  delBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#104c48" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shredder-icon lucide-shredder"><path d="M4 13V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v5"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 22v-5"/><path d="M14 19v-2"/><path d="M18 20v-3"/><path d="M2 13h20"/><path d="M6 20v-3"/></svg>`;
+  title.id = "title";
+  // functionbtns.setAttribute("class", "fxnBtns");
+  functionbtns.append(donebtn, delBtn);
+  li.append(title, functionbtns);
+  list.appendChild(li);
+  //-------------Done Function------------
+  donebtn.addEventListener("click", () => {
+    li.classList.toggle("bg-gray-400");
+  });
+  //------------Delete Function-------------
+  delBtn.addEventListener("click", () => {
+    data = data.filter((item) => item.id !== id);
+    localStorage.setItem("myTask", JSON.stringify(data));
+    list.removeChild(li);
+  });
+
+  //------------------Edit Function------------------
+  let same = title.getElementsByClassName("same");
+  Object.values(same).forEach((value) => {
+    value.addEventListener("click", (e) => {
+      console.log(e.target.innerText);
+      editTask(e.target);
+    });
+  });
+  function editTask(targetValue) {
+    // editBtn.disabled = true;
+    let editbox = document.getElementById("edits");
+    const editInput = document.createElement("textarea");
+    editInput.classList =
+      "w-100 h-50 italic border-3 border-teal-800 focus:border-teal-400 rounded-2xl shadow-lg outline p-4 outline-teal/5";
+
+    // " p-3 border-1 w-100 h-50 focus:border-teal-600 rounded-xl ";
+
+    editInput.setAttribute("id", inputId++);
+    editInput.value = targetValue.innerText;
+    editbox.appendChild(editInput);
+    textarea.style.display = "none";
+    editInput.focus();
+
+    editInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        let newVal = editInput.value.trim();
+        if (newVal !== "") {
+          targetValue.innerText = newVal;
+          let item = data.find((obj) => {
+            return obj.id === id;
+          });
+          // console.log(targetValue.id);
+          if (targetValue.id === "tasks") {
+            item.task = newVal;
+          } else {
+            item.desc = newVal;
+          }
+          localStorage.setItem("myTask", JSON.stringify(data));
+        }
+        if (editbox.contains(editInput)) {
+          editbox.removeChild(editInput);
+          textarea.style.display = "flex";
+          // editBtn.disabled = false;
+        }
+      }
+    });
+
+    editInput.addEventListener("blur", () => {
+      if (editbox.contains(editInput)) editbox.removeChild(editInput);
+      // editBtn.disabled = false;
+      textarea.style.display = "flex";
+    });
+  }
+}
+
+onload();

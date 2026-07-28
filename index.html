@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>To Do Web App</title>
+
+    <!-- <link rel="stylesheet" href="todo.css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body id="body" class="italic flex bg-gray-200 relative">
+    <div id="main-frame">
+      <h3 id="heading" class="text-4xl italic">What is Today's Aim?</h3>
+      <div class="flex flex-col gap-4">
+        <input id="task" type="text" placeholder="Enter Task" />
+        <textarea
+          id="task-desc"
+          placeholder="Describe your Description"
+        ></textarea>
+        <div id="edits"></div>
+      </div>
+      <button id="btn">Add</button>
+    </div>
+    <h2 class="italic text-4xl pl-3 fixed top-6 right-90">
+      Your Tasks Here...
+    </h2>
+    <div
+      id="boxing"
+      class="bg-scroll h-120 bg-gray-300 p-4 mr-6 rounded-xl shadow-xl w-190 scrollbar-none relative top-20 p=3 overflow-y-auto"
+      4
+    >
+      <ol id="list" class="flex flex-col items-center relative"></ol>
+    </div>
+  </body>
+  <script src="script.js"></script>
+</html>
